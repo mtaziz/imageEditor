@@ -1,0 +1,112 @@
+doctype html
+head
+    link(href="css/style.css" rel="stylesheet")   
+    link(href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet")
+
+body
+    #app
+        header#header
+            ul.flow-inline-from-left
+                li File
+                    ul.drop-down
+                        li
+                            span#file-new New
+                        li
+                            span#file-open Open
+                        li
+                            span#file-open-as-layer Open as Layers
+                        li
+                            span#file-quit Quit
+                li Image
+                li Filters
+                    ul.drop-down
+                        li Blur
+                        li Brightness
+                        li Gray Scale
+                        li Hue-rotate
+                        li Invert
+                        li Opacity
+                        li Saturate
+                        li epia
+                li
+                    span#file-help Help  
+            .zoom-control
+                i.fa.fa-minus#decreaseZoom
+                span Zoom
+                i.fa.fa-plus#increaseZoom
+        aside#tools
+            h3 Tools
+            ul.tools-list
+                li(title="Text Tool: create edit text layer")
+                    i.fa.fa-font(aria-hidden="true")
+                li(title="Crop Tool:")
+                    i.fa.fa-crop(aria-hidden="true")
+                li(title="Pencil Tool:")
+                    i.fa.fa-pencil(aria-hidden="true")
+                li(title="Move Tool:")
+                    i#move-tool.fa.fa-arrows(aria-hidden="true")
+            h3 Colors
+            #color-picker
+                input#foreground-color.color-picker(
+                    type="color" 
+                    value="#ffffff" 
+                    title="Choose foreground color"
+                )
+                input#background-color.color-picker(
+                    type="color" 
+                    value="#000000" 
+                    title="Choose background color"
+                )
+            #config-panel
+                #font-tab
+                    .tab Font    
+                    .settings-box
+                        .config-item
+                            span.label Family
+                            select(id="font-family")
+                                option(value="cursive") cursive
+                                option(value="fantasy") fantasy
+                                option(value="monospace") monospace
+                                option(value="sans-serif") sans-serif
+                                option(value="serif") serif
+                        .config-item
+                            span.label Size
+                            input(type="number" id="font-size")
+                            span px
+                        .config-item
+                            span.label Color
+                            input(type="color" id="font-color")
+                        .config-item
+                            span.label Style
+                            select(id="font-style")
+                                option(value="normal") normal
+                                option(value="italic") italic
+                        .config-item
+                            span.label Weight
+                            select(id="font-weight")
+                                option(value="normal") normal
+                                option(value="italic") Bold 
+        aside#layers
+            h3 Layers
+            .config-item
+                span.label Opacity
+                input#layerOpacity(
+                    type="number" 
+                    max="100" 
+                    min="0" 
+                    value="100"
+                )
+                span %
+            form#layersList   
+        main#editor-pane
+            #editor-view 
+    script var exports = {}
+    script(src="js/states.js")
+    script(src="js/listeners.js")
+    script(src="js/editorViewPort.js")
+    script(src="js/header.js")
+    script(src="js/canvas.js")
+    script(src="js/layers.js")
+    script(src="js/templates.js")
+    script(src="js/tools.js")
+    script(src="js/tools/MoveTool.js")

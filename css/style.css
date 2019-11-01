@@ -1,0 +1,269 @@
+:root {
+    --darker-color: #292929;
+    --lighter-bg: #454545;
+    --light: #a29c9c;
+    --tools-width: 250px;
+    --header-height: 30px;
+    --highlight-color: #29d496;
+    --grid-color: #808080;
+    --cancel-color: #c9295b;
+    --light-color-dark-bg: #fff;
+}
+* {
+    box-sizing: border-box;
+}
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+/* components */
+#app {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: var(--lighter-bg);
+}
+#app #header{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--header-height);
+    background: var(--darker-color);
+}
+#app #tools {
+    position: fixed;
+    top: var(--header-height);
+    height: calc(100% - var(--header-height));
+    width: var(--tools-width);
+    background: var(--darker-color);
+    padding: 5px;
+}
+#app #layers {
+    position: fixed;
+    top: var(--header-height);
+    right: 0;
+    height: calc(100% - var(--header-height));
+    width: var(--tools-width);
+    background: var(--darker-color);
+    padding: 5px;
+}
+/* header */
+.flow-inline-from-left {
+    list-style: none;
+    display: inline-flex;
+    justify-content: left;
+    margin: 0;
+    padding: 7px;
+}
+.flow-inline-from-left li {
+    color: var(--light-color-dark-bg);
+    text-transform: capitalize;
+    padding: 1px 8px;
+    position: relative;
+    cursor: pointer;
+}
+.flow-inline-from-left li:hover {
+    background: var(--lighter-bg);
+}
+.zoom-control {
+    display: inline-flex;
+    justify-content: right;
+    color: var(--light-color-dark-bg);
+}
+.zoom-control .fa-minus {
+   margin: 0 10px; 
+   cursor: pointer;
+}
+.zoom-control .fa-plus {
+    margin: 0 10px;
+    cursor: pointer;
+}
+.zoom-control span {
+    position: relative;
+    bottom: 2px;
+}
+.drop-down {
+    display: none;
+    list-style: none;
+    position: absolute;
+    left: 0;
+    z-index: 100;
+    border: 1px solid var(--light);
+    padding: 0;
+    min-width: 200px;
+    background: var(--lighter-bg);
+}
+.drop-down li {
+    margin-bottom: 5px;
+    cursor: pointer;
+    padding: 10px 20px;
+}
+.drop-down li:hover {
+    background: var(--darker-color);
+}
+.flow-inline-from-left li:hover > .drop-down {
+    display: block;
+}
+/* tools list */
+.tools-list {
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 40px;
+}
+.tools-list li {
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+.tools-list li:hover, .tool-focus {
+    background: var(--lighter-bg);
+    border: 1px solid var(--light);
+}
+.tools-list i {
+    color: var(--light-color-dark-bg);
+    padding: 5px;
+}
+#color-picker {
+    display: flex;
+    justify-content: center;
+}
+#foreground-color {
+    margin-right: 15px;
+}
+.color-picker {
+    height: 30px;
+    width: 50px;
+}
+#config-panel {
+    margin-top: 50px;
+}
+.settings-box {
+    background: var(--lighter-bg);
+    padding: 10px;
+}
+.tab {
+    background: var(--lighter-bg);
+    color: var(--highlight-color);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding: 5px 10px;
+    display: inline-block; 
+}
+.label {
+    width: 100px;
+    color: var(--light-color-dark-bg);
+    display: inline-block;
+}
+#app input, #app select {
+    width: 87px;
+}
+.config-item {
+    margin-bottom: 10px;
+}
+.config-item span {
+    color: var(--light-color-dark-bg);
+}
+/* general */
+h3 {
+    position: relative;
+    left: 11px;
+    color: var(--highlight-color);
+    text-transform: uppercase;
+    font-size: 1rem;
+    font-weight: normal;
+}
+input[type="color"] {
+    border: 0;
+    padding: 0;
+}
+/* editor pane */
+#editor-pane{
+    position: absolute;
+    top: var(--header-height);
+    left: var(--tools-width);
+    width: calc(100% - var(--tools-width) - var(--tools-width));
+    height: calc(100% - 30px);  
+    justify-content: center;
+    overflow: auto;
+}
+#editor-view {
+    display: none;
+    border: 2px dashed var(--highlight-color);
+    background-image: linear-gradient(45deg, var(--grid-color) 25%, transparent 25%), 
+                      linear-gradient(-45deg, var(--grid-color) 25%, transparent 25%), 
+                      linear-gradient(45deg, transparent 75%, var(--grid-color) 75%), 
+                      linear-gradient(-45deg, transparent 75%, var(--grid-color) 75%);
+    background-size: 20px 20px;
+    transform-origin: 0 0;
+    background-position: 0 0, 0 10px, 10px -10px, -10px 0px;   
+    position: absolute;
+    top: 50px;
+    left: 50px;   
+}
+.canvas-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+/* settings popup */
+.settingsPopup {
+    width: 360px;
+    background: var(--darker-color);
+    position: absolute;
+    top: 50px;
+    left: calc(50% - 180px);
+    padding: 10px;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 4px 1px lightgrey;
+}
+.margLeft15 {
+    margin-left: 15px;
+}
+#createNewProject {
+    background: var(--highlight-color);
+    color: var(--light-color-dark-bg);
+}
+#cancelNew {
+    background: var(--cancel-color);
+    color: var(--light-color-dark-bg);
+}
+.btns {
+    margin: 10px;
+    border: 0;
+    padding: 5px 10px;  
+    cursor: pointer; 
+}
+.popupBtns {
+    display: flex; 
+    justify-content: center;
+}
+/* layers list */
+#layersList {
+    text-align: center
+}
+.layer-image {
+    border: 1px solid yellow;
+    width: 150px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+.layer-title {
+    text-align: left;
+    color: var(--light-color-dark-bg);
+    display: block;
+    margin-left: 10px;
+}
+.layer-item {
+    position: relative;
+}
+.layer-radio-button {
+    position: absolute;
+    left: -26px;
+    top: 35px;
+}
