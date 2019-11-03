@@ -1,3 +1,5 @@
+const states = require('./states');
+
 document.addEventListener('click', function (event) {
     switch ((<HTMLInputElement>event.target).id) {
       case 'file-new':
@@ -40,10 +42,25 @@ document.addEventListener('click', function (event) {
 
       // tools
       case 'move-tool':
-        new MoveTool(event);
+        toolsSingleton('MoveTool', event);
         break; 
     }
 });
+
+const toolInstances = (function() : any {
+    return {
+      MoveTool: (event : MouseEvent) : MoveTool => new MoveTool(event)  
+    }
+})();
+
+
+function toolsSingleton(tool : string, event : MouseEvent) : void {
+      if(__states.tools.currentTool === tool) {
+        __states.tools.toolObject.quit();
+      }
+      __states.tools.toolObject = toolInstances[tool](event);
+      __states.tools.currentTool = tool;
+}
 
 document.addEventListener('change', function(event) {
     switch ((<HTMLInputElement>event.target).id) {
@@ -57,7 +74,11 @@ document.addEventListener('change', function(event) {
     }    
 });
 
-const editor = <HTMLElement>document.getElementById('editor-view');
-const editorPane = <HTMLElement>document.getElementById('editor-pane');
-const body = <HTMLElement>document.querySelector('body');
-const layersList = <HTMLElement>document.getElementById('layersList');
+
+const __elements = (function() {
+  return {
+      editor : () => <HTMLElement>document.getElementById('editor-view'),
+      body : () => <HTMLElement>document.querySelector('body'),
+      layersList : () => <HTMLElement>document.getElementById('layersList')      
+    }    
+})();

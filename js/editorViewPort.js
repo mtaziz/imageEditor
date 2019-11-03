@@ -4,18 +4,18 @@ var Zoom =
 /** @class */
 function () {
   function Zoom() {
-    this.currentZoom = states.zoom;
+    this.currentZoom = __states.zoom;
     this.zoomInc = 0.05;
   }
 
   Zoom.prototype.increaseZoom = function () {
-    states.zoom = states.zoom > this.zoomInc ? this.currentZoom + this.zoomInc : states.zoom;
-    editor.style.transform = "scale(" + states.zoom + ")";
+    __states.zoom = __states.zoom > this.zoomInc ? this.currentZoom + this.zoomInc : __states.zoom;
+    __elements.editor().style.transform = "scale(" + __states.zoom + ")";
   };
 
   Zoom.prototype.decreaseZoom = function () {
-    states.zoom = states.zoom > this.zoomInc ? this.currentZoom - this.zoomInc : states.zoom;
-    editor.style.transform = "scale(" + states.zoom + ")";
+    __states.zoom = __states.zoom > this.zoomInc ? this.currentZoom - this.zoomInc : __states.zoom;
+    __elements.editor().style.transform = "scale(" + __states.zoom + ")";
   };
 
   return Zoom;

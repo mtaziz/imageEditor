@@ -100,7 +100,10 @@ html, body {
 .drop-down li {
     margin-bottom: 5px;
     cursor: pointer;
+}
+.drop-down li span {
     padding: 10px 20px;
+    display: inline-block;
 }
 .drop-down li:hover {
     background: var(--darker-color);
@@ -210,6 +213,23 @@ input[type="color"] {
     top: 0;
     left: 0;
 }
+/* width */
+::-webkit-scrollbar {
+    width: 15px;
+    height: 15px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #432e2e; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #b91d4f;
+    border-radius: 25px; 
+  }
+  
 /* settings popup */
 .settingsPopup {
     width: 360px;
@@ -221,6 +241,10 @@ input[type="color"] {
     box-sizing: border-box;
     box-shadow: 0px 0px 4px 1px lightgrey;
 }
+.settingsPopup input {
+    color: #fff;
+}
+
 .margLeft15 {
     margin-left: 15px;
 }

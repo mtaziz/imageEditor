@@ -4,22 +4,22 @@ class Zoom {
     private currentZoom: number;
 
     public constructor() {
-        this.currentZoom = states.zoom;
+        this.currentZoom = __states.zoom;
         this.zoomInc = 0.05;
     }
 
     public increaseZoom() {
-        states.zoom = states.zoom > this.zoomInc 
+        __states.zoom = __states.zoom > this.zoomInc 
             ? this.currentZoom + this.zoomInc 
-            : states.zoom;         
-        editor.style.transform = `scale(${states.zoom})`;
+            : __states.zoom;         
+            __elements.editor().style.transform = `scale(${__states.zoom})`;
     }
 
     public decreaseZoom() {
-        states.zoom = states.zoom > this.zoomInc 
+        __states.zoom = __states.zoom > this.zoomInc 
             ? this.currentZoom - this.zoomInc 
-            : states.zoom;         
-        editor.style.transform = `scale(${states.zoom})`;
+            : __states.zoom;         
+            __elements.editor().style.transform = `scale(${__states.zoom})`;
     }
 }
 

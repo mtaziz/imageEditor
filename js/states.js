@@ -1,6 +1,6 @@
 "use strict";
 
-var states = {
+var __states = {
   // editor view port settings
   activeLayer: null,
   zoom: 1,
@@ -19,5 +19,9 @@ var states = {
     color: '#000',
     style: 'normal',
     weight: 'normal'
+  },
+  tools: {
+    currentTool: null,
+    toolObject: null
   }
 };

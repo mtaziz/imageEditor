@@ -19,25 +19,26 @@ function () {
     this.image = image;
     this.opacity = opacity; // update layer id to match current
 
-    states.totalLayers++;
-    states.layer.last = "layer-" + states.totalLayers;
+    __states.totalLayers++;
+    __states.layer.last = "layer-" + __states.totalLayers;
     this.createCanvas();
     this.addLayerToQueue(); // this is the first layer
 
-    if (states.totalLayers === 1) {
+    if (__states.totalLayers === 1) {
       var layerObj = new EditorProps(getScreenSize(), this.getImageObj());
       this.props = layerObj.getConfig();
       this.setStyleOnEditor();
     } // add layer to view
 
 
-    editor.append(this.canvas); // add new layer to layers pane list
+    __elements.editor().append(this.canvas); // add new layer to layers pane list
+
 
     if (this.image) {
-      var addTolayers = new AddTolayers(states.layer.last, this.image);
+      var addTolayers = new AddTolayers(__states.layer.last, this.image);
       addTolayers.addToDom();
     } else {
-      var addTolayers = new AddTolayers(states.layer.last);
+      var addTolayers = new AddTolayers(__states.layer.last);
       addTolayers.addToDom();
     }
   }
@@ -50,36 +51,36 @@ function () {
 
   CreateLayer.prototype.addLayerToQueue = function () {
     var layerObj = {
-      w: states.width,
-      h: states.height,
-      op: this.opacity
+      w: __states.width,
+      h: __states.height,
+      op: this.opacity,
+      x: 0,
+      y: 0
     };
-    states.layer.layers[states.layer.last] = layerObj;
+    __states.layer.layers[__states.layer.last] = layerObj;
   };
 
   CreateLayer.prototype.addStylesToLayer = function () {
-    console.log(this.canvas);
-    console.log("" + states.layer.last);
-    this.canvas.id = "" + states.layer.last;
-    this.canvas.width = states.width;
-    this.canvas.height = states.height;
+    this.canvas.id = "" + __states.layer.last;
+    this.canvas.width = __states.width;
+    this.canvas.height = __states.height;
     this.canvas.style.opacity = this.opacity.toString();
   };
 
   CreateLayer.prototype.getImageObj = function () {
     return {
-      width: states.width,
-      height: states.height
+      width: __states.width,
+      height: __states.height
     };
   };
 
   CreateLayer.prototype.setStyleOnEditor = function () {
-    editor.style.display = 'block';
-    editor.style.width = states.width + states.bordersWidth + "px";
-    editor.style.height = states.height + states.bordersWidth + "px";
+    __elements.editor().style.display = 'block';
+    __elements.editor().style.width = __states.width + __states.bordersWidth + "px";
+    __elements.editor().style.height = __states.height + __states.bordersWidth + "px";
 
     if (this.props.scale > 0 && this.props.scale < 1) {
-      editor.style.transform = "scale(" + this.props.scale + ")";
+      __elements.editor().style.transform = "scale(" + this.props.scale + ")";
     }
   };
 
@@ -105,8 +106,8 @@ function () {
     this.canvas = document.getElementById(canvasId);
     this.ctx = this.canvas.getContext("2d");
     this.ctx.fillStyle = 'rgba(0,0,0,0)';
-    this.ctx.fillRect(0, 0, states.width, states.height);
-    this.layersPanel = layersList;
+    this.ctx.fillRect(0, 0, __states.width, __states.height);
+    this.layersPanel = __elements.layersList();
     this.container = this.createContainer();
     this.screenshot = this.image ? this.image : this.screenshotCanvas();
     this.createNameBox();
@@ -123,7 +124,7 @@ function () {
     input.name = 'layerRadio';
     input.checked = true;
     div.append(input);
-    states.activeLayer = this.canvasId;
+    __states.activeLayer = this.canvasId;
     return div;
   };
 
@@ -142,7 +143,7 @@ function () {
       radio.addEventListener('change', function (event) {
         _this.resetBulletsList();
 
-        states.activeLayer = event.target.value;
+        __states.activeLayer = event.target.value;
         event.target.checked = true;
       });
     });
@@ -174,8 +175,8 @@ function () {
 }();
 
 function adjustLayerOpacity(value) {
-  if (!states.activeLayer) return;
+  if (!__states.activeLayer) return;
   if (!(value >= 0 || value <= 100)) return;
-  var layer = document.getElementById(states.activeLayer);
+  var layer = document.getElementById(__states.activeLayer);
   layer.style.opacity = (value / 100).toString();
 }

@@ -1,5 +1,6 @@
 "use strict";
 
+
 document.addEventListener('click', function (event) {
   switch (event.target.id) {
     case 'file-new':
@@ -42,10 +43,28 @@ document.addEventListener('click', function (event) {
     // tools
 
     case 'move-tool':
-      new MoveTool(event);
+      toolsSingleton('MoveTool', event);
       break;
   }
 });
+
+var toolInstances = function () {
+  return {
+    MoveTool: function (event) {
+      return new MoveTool(event);
+    }
+  };
+}();
+
+function toolsSingleton(tool, event) {
+  if (__states.tools.currentTool === tool) {
+    __states.tools.toolObject.quit();
+  }
+
+  __states.tools.toolObject = toolInstances[tool](event);
+  __states.tools.currentTool = tool;
+}
+
 document.addEventListener('change', function (event) {
   switch (event.target.id) {
     case 'file-upload':
@@ -57,7 +76,17 @@ document.addEventListener('change', function (event) {
       adjustLayerOpacity(Number(event.target.value));
   }
 });
-var editor = document.getElementById('editor-view');
-var editorPane = document.getElementById('editor-pane');
-var body = document.querySelector('body');
-var layersList = document.getElementById('layersList');
+
+var __elements = function () {
+  return {
+    editor: function () {
+      return document.getElementById('editor-view');
+    },
+    body: function () {
+      return document.querySelector('body');
+    },
+    layersList: function () {
+      return document.getElementById('layersList');
+    }
+  };
+}();

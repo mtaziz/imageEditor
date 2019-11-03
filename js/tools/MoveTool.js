@@ -31,11 +31,71 @@ function (_super) {
   __extends(MoveTool, _super);
 
   function MoveTool(element) {
-    var _this = _super.call(this, element) || this;
+    var _this = this;
 
-    console.log(element);
+    if (!__states.activeLayer) return;
+    _this = _super.call(this, element) || this;
+
+    _this.canvasEditMode();
+
+    _this.run();
+
     return _this;
   }
+
+  MoveTool.prototype.quit = function () {
+    document.getElementById(__states.activeLayer).style.cursor = 'pointer';
+    return this.active = false;
+  };
+
+  MoveTool.prototype.canvasEditMode = function () {
+    this.canvas.style.cursor = 'crosshair';
+  };
+
+  MoveTool.prototype.run = function () {
+    var _this = this;
+
+    var self = this;
+    this.isDraggable = false;
+
+    this.canvas.onmousedown = function (event) {
+      self.isDraggable = true;
+      self.entry = _this.getCursorPosition(event);
+      self.currentX = parseFloat(self.entry.x);
+      self.currentY = parseFloat(self.entry.Y);
+    };
+
+    this.canvas.onmousemove = function (event) {
+      if (self.isDraggable) {
+        var pos = self.getCursorPosition(event);
+        self.clearCanvas();
+        self.context.drawImage(self.image, pos.x, pos.y);
+      }
+
+      ;
+    }; // record to
+
+
+    this.canvas.onmouseup = function (event) {
+      var cursorX = self.getCursorPosition(event).x;
+      var cursorY = self.getCursorPosition(event).y;
+
+      var movedX = function () {
+        return cursorX === self.currentX ? 0 : cursorX > self.currentX ? cursorX - self.currentX : self.currentX - cursorX;
+      };
+
+      var movedY = function () {
+        return cursorY === self.currentY ? 0 : cursorY > self.currentY ? cursorY - self.currentY : self.currentY - cursorY;
+      };
+
+      console.log(cursorX + " " + _this.currentX);
+      self.currentX = movedX();
+      self.currentY = movedY();
+      self.isDraggable = false;
+    };
+  };
+
+  MoveTool.prototype.moveContext = function () {};
 
   return MoveTool;
 }(Tool);

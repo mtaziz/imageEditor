@@ -10,6 +10,11 @@ interface FontInterface {
     weight: string;
 }
 
+interface ToolsInterface {
+    currentTool: string;
+    toolObject: any;
+}
+
 interface StatesInterface  {
     layer: LayerInterface;
     activeLayer: string;
@@ -19,9 +24,10 @@ interface StatesInterface  {
     bordersWidth: number;
     totalLayers : number;
     font: FontInterface;
+    tools: ToolsInterface;
 }
 
-export const states: StatesInterface = {
+export const __states: StatesInterface = {
     // editor view port settings
     activeLayer: null,
     zoom: 1,
@@ -40,6 +46,10 @@ export const states: StatesInterface = {
         color: '#000',
         style: 'normal',
         weight: 'normal'
+    },
+    tools: {
+        currentTool: null,
+        toolObject: null
     }
 
 };
