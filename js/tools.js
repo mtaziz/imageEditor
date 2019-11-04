@@ -22,8 +22,6 @@ function () {
     this.canvasScreenshot = this.canvas.toDataURL();
     this.image = new Image();
     this.image.src = this.canvasScreenshot;
-    this.currentX = this.canvas.width / 2;
-    this.currentY = this.canvas.height / 2;
   }
 
   Tool.prototype.getContext = function () {
