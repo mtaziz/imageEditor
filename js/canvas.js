@@ -4,17 +4,19 @@
 var DrawToCanvas =
 /** @class */
 function () {
-  function DrawToCanvas(canvasId, image, x, y) {
+  function DrawToCanvas(canvasId, image, x, y, width, height) {
     this.canvasId = canvasId;
     this.canvas = document.getElementById(this.canvasId);
     this.ctx = this.canvas.getContext("2d");
     this.image = image;
     this.x = x;
     this.y = y;
+    this.width = width;
+    this.height = height;
   }
 
   DrawToCanvas.prototype.drawImage = function () {
-    this.ctx.drawImage(this.image, this.x, this.y);
+    this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
   };
 
   return DrawToCanvas;

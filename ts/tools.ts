@@ -26,7 +26,7 @@ export class Tool {
         this.context = this.canvas.getContext('2d');
         this.canvasScreenshot = this.canvas.toDataURL();
         this.image = new Image();
-        this.image.src = this.canvasScreenshot;        
+        this.image.src = this.canvasScreenshot;
 
     }
 

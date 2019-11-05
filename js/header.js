@@ -32,27 +32,41 @@ function () {
   function CreateByUpload(files) {
     this.files = files;
     var reader = new FileReader();
-    var name = files.name;
+    var self = this;
 
     reader.onload = function (e) {
-      var img = new Image(); // @ts-ignore
+      self.img = new Image(); // @ts-ignore
 
-      img.src = e.target.result;
+      self.img.src = e.target.result;
+      self.imgWidth = self.img.width;
+      self.imgHeight = self.img.height;
 
-      img.onload = function () {
+      self.img.onload = function () {
         if (Object.keys(__states.layer.layers).length === 0) {
           // load image offscreen to get dimensions
           (function (img) {
-            // RESETS - REFACTOR
             resetApp();
             __states.width = img.width;
             __states.height = img.height; // END RESETS
-          })(img);
+          })(self.img);
+        } else {
+          if (self.imgWidth > __states.width || self.imgHeight > __states.height) {
+            var diffWidth = self.imgWidth / (self.imgWidth / __states.width);
+          }
+
+          if (self.imgHeight > __states.height) {
+            var diffHeight = self.imgHeight / (self.imgHeight / __states.height);
+          }
+
+          if (diffWidth > diffHeight) {
+            self.imgWidth = diffWidth;
+            self.imgHeight = self.imgHeight / (self.imgWidth / __states.width);
+          }
         }
 
-        var Layer = new CreateLayer(1, img);
+        var Layer = new CreateLayer(1, self.img);
         var canvasId = Layer.getId();
-        var draw = new DrawToCanvas(canvasId, img, 0, 0);
+        var draw = new DrawToCanvas(canvasId, self.img, 0, 0, self.imgWidth, self.imgHeight);
         draw.drawImage();
       };
     }; // img.src = imageBlob

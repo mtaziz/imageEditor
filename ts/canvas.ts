@@ -6,19 +6,30 @@ class DrawToCanvas {
     ctx: CanvasRenderingContext2D;
     image : HTMLImageElement;
     x: number;
-    y: number;       
+    y: number;     
+    width: number;
+    height: number;  
  
-    public constructor(canvasId : string, image : HTMLImageElement, x : number, y : number) {
+    public constructor(
+            canvasId : string, 
+            image : HTMLImageElement, 
+            x : number, 
+            y : number, 
+            width : number, 
+            height: number
+        ) {
         this.canvasId = canvasId;
         this.canvas = document.getElementById(this.canvasId);
         this.ctx  = <CanvasRenderingContext2D> this.canvas.getContext("2d");
         this.image = image;
         this.x = x;
         this.y = y;
+        this.width = width;
+        this.height = height;
     }
 
     public drawImage() {
-        this.ctx.drawImage(this.image, this.x, this.y);
+        this.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
 
 }
