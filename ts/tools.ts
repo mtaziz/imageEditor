@@ -15,11 +15,11 @@ export class Tool {
         this.element = element;
         this.targetId = (<HTMLInputElement>this.element.target).id;
 
-        if((<HTMLInputElement>this.element.target).classList.contains('tool-focus')) {
-            (<HTMLInputElement>this.element.target).classList.remove('tool-focus');
+        if((<HTMLInputElement>this.element.target).parentElement.classList.contains('tool-focus')) {
+            (<HTMLInputElement>this.element.target).parentElement.classList.remove('tool-focus');
             return;
         } else {
-            (<HTMLInputElement>this.element.target).classList.add('tool-focus');
+            (<HTMLInputElement>this.element.target).parentElement.classList.add('tool-focus');
         }
 
         this.canvas = <HTMLCanvasElement>document.getElementById(__states.activeLayer);

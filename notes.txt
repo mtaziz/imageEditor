@@ -1,0 +1,34 @@
+
+FILE Size: 
+
+    var data_url=canvas.toDataURL("image/png");
+    var head = 'data:image/png;base64,';
+    var imgFileSize = Math.round((data_url.length - head.length)*3/4) ;
+
+    Math.round((data_url.length - head.length) * 3 / 4) / 1024 / 1024 
+
+
+tools :
+    move, resize, font, select, shapes, gradient, color picker, bucket fill, zoom, opacity, rotate, flip, crop
+
+
+
+history:
+    var myObj = window.myObj || {};
+
+    myObj = {
+        history: [],
+        canvas: null
+    };
+    Get the canvas data:
+
+    myObj.canvas = document.getElementById('canvas-id');
+    var ctx = myObj.canvas.getContext('2d');
+    var data = JSON.stringify(ctx.getImageData(0, 0, myObj.canvas.width, myObj.canvas.height));
+
+    myObj.history.push(data);
+    Reload data:
+
+    var reloadData = JSON.parse(myObj.history[someIndex]);
+    var ctx = myObj.canvas.getContext('2d');
+    ctx.putImageData(reloadData, 0, 0);    

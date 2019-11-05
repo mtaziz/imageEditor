@@ -1,12 +1,13 @@
 :root {
     --darker-color: #292929;
-    --lighter-bg: #454545;
+    --lighter-bg: #333333;
     --light: #a29c9c;
-    --tools-width: 250px;
+    --tools-width: 50px;
+    --layers-width: 250px;
     --header-height: 30px;
     --highlight-color: #29d496;
     --grid-color: #808080;
-    --cancel-color: #c9295b;
+    --cancel-color: #b91d4f;
     --light-color-dark-bg: #fff;
 }
 * {
@@ -24,7 +25,7 @@ html, body {
     position: absolute;
     top: 0;
     left: 0;
-    background: var(--lighter-bg);
+    background: var(--darker-color);
 }
 #app #header{
     position: absolute;
@@ -32,14 +33,15 @@ html, body {
     left: 0;
     width: 100%;
     height: var(--header-height);
-    background: var(--darker-color);
+    background: var(--lighter-bg);
+    font-size: 0.9rem;
 }
 #app #tools {
     position: fixed;
     top: var(--header-height);
     height: calc(100% - var(--header-height));
     width: var(--tools-width);
-    background: var(--darker-color);
+    background: var(--lighter-bg);
     padding: 5px;
 }
 #app #layers {
@@ -47,9 +49,8 @@ html, body {
     top: var(--header-height);
     right: 0;
     height: calc(100% - var(--header-height));
-    width: var(--tools-width);
-    background: var(--darker-color);
-    padding: 5px;
+    width: var(--layers-width);
+    background: var(--lighter-bg);
 }
 /* header */
 .flow-inline-from-left {
@@ -57,7 +58,7 @@ html, body {
     display: inline-flex;
     justify-content: left;
     margin: 0;
-    padding: 7px;
+    padding: 0;
 }
 .flow-inline-from-left li {
     color: var(--light-color-dark-bg);
@@ -65,9 +66,10 @@ html, body {
     padding: 1px 8px;
     position: relative;
     cursor: pointer;
+    padding: 7px 8px;
 }
 .flow-inline-from-left li:hover {
-    background: var(--lighter-bg);
+    background: var(--darker-color);
 }
 .zoom-control {
     display: inline-flex;
@@ -91,6 +93,7 @@ html, body {
     list-style: none;
     position: absolute;
     left: 0;
+    top: 30px;
     z-index: 100;
     border: 1px solid var(--light);
     padding: 0;
@@ -102,7 +105,7 @@ html, body {
     cursor: pointer;
 }
 .drop-down li span {
-    padding: 10px 20px;
+    padding: 0px 5px;    
     display: inline-block;
 }
 .drop-down li:hover {
@@ -114,29 +117,42 @@ html, body {
 /* tools list */
 .tools-list {
     list-style: none;
-    display: flex;
     padding: 0;
     margin: 0;
-    margin-bottom: 40px;
+    text-align: center;
 }
 .tools-list li {
     cursor: pointer;
     border: 1px solid transparent;
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
 }
 .tools-list li:hover, .tool-focus {
-    background: var(--lighter-bg);
-    border: 1px solid var(--light);
+    background: var(--darker-color);
+    border-radius: 2px;
 }
 .tools-list i {
     color: var(--light-color-dark-bg);
     padding: 5px;
 }
 #color-picker {
-    display: flex;
-    justify-content: center;
+    text-align: center;
 }
-#foreground-color {
-    margin-right: 15px;
+
+input[type="color"].color-picker {
+    border: 0;
+    padding: 0;
+    border-radius: 50%;
+    overflow: hidden;	border: none;
+	width: 32px !important;
+	height: 32px !important;
+}
+input[type="color"]::-webkit-color-swatch-wrapper {
+	padding: 0;
+}
+input[type="color"]::-webkit-color-swatch {
+	border: none;
 }
 .color-picker {
     height: 30px;
@@ -158,24 +174,34 @@ html, body {
     display: inline-block; 
 }
 .label {
-    width: 100px;
     color: var(--light-color-dark-bg);
-    display: inline-block;
+    display: block;
+    position: relative;
+    font-size: 0.8rem;
 }
 #app input, #app select {
     width: 87px;
 }
 .config-item {
     margin-bottom: 10px;
-}
+    padding: 10px;
+    border-top: 1px solid #1b1717;}
 .config-item span {
     color: var(--light-color-dark-bg);
 }
+#font-tab {
+    display: none;
+}
 /* general */
+hr {
+    border: 0;
+    border-top: 1px solid #fff;
+    width: 22px;
+}
 h3 {
     position: relative;
     left: 11px;
-    color: var(--highlight-color);
+    color: var(--light-color-dark-bg);
     text-transform: uppercase;
     font-size: 1rem;
     font-weight: normal;
@@ -189,7 +215,7 @@ input[type="color"] {
     position: absolute;
     top: var(--header-height);
     left: var(--tools-width);
-    width: calc(100% - var(--tools-width) - var(--tools-width));
+    width: calc(100% - var(--tools-width) - var(--layers-width));
     height: calc(100% - 30px);  
     justify-content: center;
     overflow: auto;
@@ -215,18 +241,18 @@ input[type="color"] {
 }
 /* width */
 ::-webkit-scrollbar {
-    width: 15px;
-    height: 15px;
+    width: 10px;
+    height: 10px;
   }
   
   /* Track */
   ::-webkit-scrollbar-track {
-    background: #432e2e; 
+    background: #2b2121; 
   }
    
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: #b91d4f;
+    background: var(--cancel-color);
     border-radius: 25px; 
   }
   
@@ -267,27 +293,74 @@ input[type="color"] {
     justify-content: center;
 }
 /* layers list */
+#layers h3 {
+    margin-top: 0;
+    font-size: 0.9rem;
+    left: 0;
+    padding-left: 10px;
+}
 #layersList {
-    text-align: center
+    height: 300px;
+    overflow-y: auto;
 }
 .layer-image {
-    border: 1px solid yellow;
-    width: 150px;
+    border: 1px solid var(--highlight-color);
+    width: 50px;
     height: auto;
-    display: block;
+    display: inline-block;
     margin: 0 auto;
 }
 .layer-title {
     text-align: left;
     color: var(--light-color-dark-bg);
-    display: block;
-    margin-left: 10px;
+    display: inline-block;
+    position: relative;
+    bottom: 14px;
+    left: 10px;
+    font-size: 0.8rem;
+}
+.layers-eye {
+    padding: 5px;
+    color: #9fa4b9;
+    position: relative;
+    bottom: 12px;
+    margin-right: 10px;
+    cursor: pointer;
 }
 .layer-item {
     position: relative;
-}
+    text-align: left;
+    padding: 4px 10px 0px 10px;}
 .layer-radio-button {
     position: absolute;
     left: -26px;
     top: 35px;
+}
+#currentOpacity {
+    position: absolute;
+    right: 12px;
+}
+#layerOpacity {
+    -webkit-appearance: none; 
+    appearance: none;
+    width: 95% !important; 
+    height: 5px;
+    background: #d3d3d3; 
+    outline: none; 
+    opacity: 0.7; 
+    -webkit-transition: .2s; 
+    transition: opacity .2s;
+}
+#layerOpacity::-webkit-slider-thumb {
+    -webkit-appearance: none; 
+    appearance: none;
+    width: 20px; 
+    height: 20px;
+    border:2px solid #fff; 
+    background: var(--darker-color);
+    cursor: pointer;
+    border-radius: 50%;
+}
+.active-layer {
+    background: #1c5588;
 }

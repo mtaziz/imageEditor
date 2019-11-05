@@ -10,11 +10,11 @@ function () {
     this.element = element;
     this.targetId = this.element.target.id;
 
-    if (this.element.target.classList.contains('tool-focus')) {
-      this.element.target.classList.remove('tool-focus');
+    if (this.element.target.parentElement.classList.contains('tool-focus')) {
+      this.element.target.parentElement.classList.remove('tool-focus');
       return;
     } else {
-      this.element.target.classList.add('tool-focus');
+      this.element.target.parentElement.classList.add('tool-focus');
     }
 
     this.canvas = document.getElementById(__states.activeLayer);

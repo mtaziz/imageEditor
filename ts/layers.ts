@@ -101,7 +101,6 @@ class CreateLayer {
 
 class AddTolayers {
 
-    form: any;
     canvas: HTMLCanvasElement;
     canvasId: string;
     image?: HTMLImageElement;
@@ -112,7 +111,6 @@ class AddTolayers {
     screenshot: HTMLImageElement;
 
     public constructor(canvasId: string, image ?: HTMLImageElement) {
-        this.form = document.querySelectorAll<HTMLInputElement>("#layersList input[name='layerRadio']")
         this.canvasId = canvasId;
 
         if(image) {
@@ -129,37 +127,34 @@ class AddTolayers {
         this.screenshot = this.image 
             ? this.image
             : this.screenshotCanvas();
-        this.createNameBox();
+        this.nameBox = this.createNameBox();
     }
 
     private createContainer() : HTMLElement {
         const div = document.createElement('div');
         div.classList.add('layer-item');
-        div.id = `item-${this.canvasId}`;        
-        const input = document.createElement('input');
-        input.type = 'radio';
-        input.value = `${this.canvasId}`;
-        input.classList.add('layer-radio-button');
-        input.name = 'layerRadio'
-        input.checked = true;
-        div.append(input);
+        div.id = `item-${this.canvasId}`;
+        div.classList.add('active-layer');  
         __states.activeLayer = this.canvasId;
+        this.resetList();
         return div;        
     }
 
-    private resetBulletsList() {
-        [...this.form].forEach((radio: HTMLInputElement) => { 
-            radio.checked = false;
+    private resetList() {
+        var listItems = <any>document.querySelectorAll(".layer-item");
+        [...listItems].forEach((item: HTMLElement) => { 
+            item.classList.remove('active-layer');
         });
     }
 
     private listenForEvents() {
-        const form = <any>document.querySelectorAll("#layersList input[name='layerRadio']");
-        [...form].forEach((radio: HTMLInputElement) => { 
-            radio.addEventListener('change', (event: Event) => {
-                this.resetBulletsList();
-                __states.activeLayer = (<HTMLInputElement>event.target).value;
-                (<HTMLInputElement>event.target).checked = true;
+        var self = this;
+        var listItems = <any>document.querySelectorAll(".layer-item");
+        [...listItems].forEach((item: HTMLElement) => { 
+            item.addEventListener('click', function() {
+                self.resetList();
+                __states.activeLayer = this.id.replace('item-', '');
+                this.classList.add('active-layer');
             }); 
         });        
     }
@@ -174,15 +169,25 @@ class AddTolayers {
     private createNameBox() : HTMLElement {
         const name = document.createElement('span');
         name.classList.add('layer-title');
-        name.innerHTML = this.canvasId;  
+        name.innerHTML = this.canvasId;
+        console.log(this.canvasId)
         return name;      
     }
 
+    private hideLayer() {
+        const i = document.createElement('i');
+        i.classList.add('fa');
+        i.classList.add('fa-eye');
+        i.classList.add('layers-eye')
+        i.dataset.layer = this.canvasId;
+        return i;
+    }
+
     public addToDom() : void {
+        this.container.append(this.hideLayer())
         this.container.append(this.screenshot);
         this.container.append(this.nameBox);
         this.layersPanel.append(this.container);       
-        this.resetBulletsList();
         this.listenForEvents();
     }
 
@@ -192,6 +197,8 @@ function adjustLayerOpacity(value : number) {
     if(!__states.activeLayer) return;
     if(!(value >= 0 || value <= 100) ) return;
     const layer = document.getElementById(__states.activeLayer);
+    const displayOpacity = document.getElementById('currentOpacity');
+    displayOpacity.innerHTML = `${value}%`;
     layer.style.opacity = (value / 100).toString();
 
 }

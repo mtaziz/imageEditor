@@ -35,18 +35,19 @@ body
                 span Zoom
                 i.fa.fa-plus#increaseZoom
         aside#tools
-            h3 Tools
             ul.tools-list
+                li(title="Move Tool:")
+                    i#move-tool.fa.fa-arrows(aria-hidden="true")            
                 li(title="Text Tool: create edit text layer")
                     i.fa.fa-font(aria-hidden="true")
                 li(title="Crop Tool:")
                     i.fa.fa-crop(aria-hidden="true")
                 li(title="Pencil Tool:")
                     i.fa.fa-pencil(aria-hidden="true")
-                li(title="Move Tool:")
-                    i#move-tool.fa.fa-arrows(aria-hidden="true")
-            h3 Colors
+
+            hr        
             #color-picker
+               
                 input#foreground-color.color-picker(
                     type="color" 
                     value="#ffffff" 
@@ -57,6 +58,7 @@ body
                     value="#000000" 
                     title="Choose background color"
                 )
+            hr    
             #config-panel
                 #font-tab
                     .tab Font    
@@ -88,16 +90,17 @@ body
                                 option(value="italic") Bold 
         aside#layers
             h3 Layers
+            #layersList   
             .config-item
-                span.label Opacity
+                .label 
+                    span Opacity
+                    span#currentOpacity
                 input#layerOpacity(
-                    type="number" 
+                    type="range" 
                     max="100" 
                     min="0" 
                     value="100"
-                )
-                span %
-            form#layersList   
+                )    
         main#editor-pane
             #editor-view 
     script var exports = {}

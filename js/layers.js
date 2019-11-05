@@ -95,7 +95,6 @@ var AddTolayers =
 /** @class */
 function () {
   function AddTolayers(canvasId, image) {
-    this.form = document.querySelectorAll("#layersList input[name='layerRadio']");
     this.canvasId = canvasId;
 
     if (image) {
@@ -110,41 +109,36 @@ function () {
     this.layersPanel = __elements.layersList();
     this.container = this.createContainer();
     this.screenshot = this.image ? this.image : this.screenshotCanvas();
-    this.createNameBox();
+    this.nameBox = this.createNameBox();
   }
 
   AddTolayers.prototype.createContainer = function () {
     var div = document.createElement('div');
     div.classList.add('layer-item');
     div.id = "item-" + this.canvasId;
-    var input = document.createElement('input');
-    input.type = 'radio';
-    input.value = "" + this.canvasId;
-    input.classList.add('layer-radio-button');
-    input.name = 'layerRadio';
-    input.checked = true;
-    div.append(input);
+    div.classList.add('active-layer');
     __states.activeLayer = this.canvasId;
+    this.resetList();
     return div;
   };
 
-  AddTolayers.prototype.resetBulletsList = function () {
-    __spreadArrays(this.form).forEach(function (radio) {
-      radio.checked = false;
+  AddTolayers.prototype.resetList = function () {
+    var listItems = document.querySelectorAll(".layer-item");
+
+    __spreadArrays(listItems).forEach(function (item) {
+      item.classList.remove('active-layer');
     });
   };
 
   AddTolayers.prototype.listenForEvents = function () {
-    var _this = this;
+    var self = this;
+    var listItems = document.querySelectorAll(".layer-item");
 
-    var form = document.querySelectorAll("#layersList input[name='layerRadio']");
-
-    __spreadArrays(form).forEach(function (radio) {
-      radio.addEventListener('change', function (event) {
-        _this.resetBulletsList();
-
-        __states.activeLayer = event.target.value;
-        event.target.checked = true;
+    __spreadArrays(listItems).forEach(function (item) {
+      item.addEventListener('click', function () {
+        self.resetList();
+        __states.activeLayer = this.id.replace('item-', '');
+        this.classList.add('active-layer');
       });
     });
   };
@@ -160,14 +154,24 @@ function () {
     var name = document.createElement('span');
     name.classList.add('layer-title');
     name.innerHTML = this.canvasId;
+    console.log(this.canvasId);
     return name;
   };
 
+  AddTolayers.prototype.hideLayer = function () {
+    var i = document.createElement('i');
+    i.classList.add('fa');
+    i.classList.add('fa-eye');
+    i.classList.add('layers-eye');
+    i.dataset.layer = this.canvasId;
+    return i;
+  };
+
   AddTolayers.prototype.addToDom = function () {
+    this.container.append(this.hideLayer());
     this.container.append(this.screenshot);
     this.container.append(this.nameBox);
     this.layersPanel.append(this.container);
-    this.resetBulletsList();
     this.listenForEvents();
   };
 
@@ -178,5 +182,7 @@ function adjustLayerOpacity(value) {
   if (!__states.activeLayer) return;
   if (!(value >= 0 || value <= 100)) return;
   var layer = document.getElementById(__states.activeLayer);
+  var displayOpacity = document.getElementById('currentOpacity');
+  displayOpacity.innerHTML = value + "%";
   layer.style.opacity = (value / 100).toString();
 }
