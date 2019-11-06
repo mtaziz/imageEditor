@@ -147,7 +147,6 @@ function () {
     var screenShotImage = new Image();
     screenShotImage.classList.add('layer-image');
     screenShotImage.src = this.canvas.toDataURL();
-    console.log(this.canvas.toDataURL())
     return screenShotImage;
   };
 

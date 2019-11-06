@@ -40,8 +40,8 @@ function (_super) {
 
     _this.cursorX = null;
     _this.cursorY = null;
-    _this.currentX = __states.layer.layers[__states.activeLayer].x;
-    _this.currentY = __states.layer.layers[__states.activeLayer].y;
+    _this.currentX = _this.getCursorPosition(event).x;
+    _this.currentY = _this.getCursorPosition(event).y;
 
     _this.run();
 
@@ -80,8 +80,11 @@ function (_super) {
     this.entry = this.getCursorPosition(event);
     this.cursorX = parseFloat(this.entry.x);
     this.cursorY = parseFloat(this.entry.y);
-    this.originalDistanceCusorX = Math.abs(this.currentX - this.cursorX);
-    this.originalDistanceCusorY = Math.abs(this.currentY - this.cursorY);
+    this.originalDistanceCusorX = this.currentX > this.cursorX ? 0 - Math.abs(this.currentX - this.cursorX) : Math.abs(this.cursorX - this.currentX);
+    this.originalDistanceCusorY = this.currentY > this.cursorY ? 0 - Math.abs(this.currentY - this.cursorY) : Math.abs(this.cursorY - this.currentY);
+    console.log(this.originalDistanceCusorX + '  ' + this.originalDistanceCusorY);
+    this.clearCanvas();
+    this.context.drawImage(this.image, this.originalDistanceCusorX, this.originalDistanceCusorY);
   };
 
   MoveTool.prototype.mouseUp = function (event) {
@@ -89,17 +92,32 @@ function (_super) {
     this.currentY = this.getCursorPosition(event).y;
     this.isDraggable = false;
     this.canvas.removeEventListener('mousemove', this.mouseMove);
-    __states.layer.layers[__states.activeLayer].x = this.getDrawPosition(this.originalDistanceCusorX, this.cursorX, this.getCoordsDistance(this.cursorX, this.currentX));
-    __states.layer.layers[__states.activeLayer].y = this.getDrawPosition(this.originalDistanceCusorY, this.cursorY, this.getCoordsDistance(this.cursorY, this.currentY));
+    /*
+            __states.layer.layers[__states.activeLayer].x =
+                this.getDrawPosition(
+                    this.originalDistanceCusorX ,
+                    this.cursorX,
+                    this.getCoordsDistance(this.cursorX, this.currentX)
+                );
+    
+            __states.layer.layers[__states.activeLayer].y =
+                this.getDrawPosition(
+                    this.originalDistanceCusorY ,
+                    this.cursorY,
+                    this.getCoordsDistance(this.cursorY, this.currentY)
+                );
+    */
   };
 
   MoveTool.prototype.mouseMove = function (event) {
     if (this.isDraggable) {
-      var pos = this.getCursorPosition(event);
-      var distanceX = this.getCoordsDistance(this.cursorX, pos.x);
-      var distanceY = this.getCoordsDistance(this.cursorY, pos.y);
+      /*
+      let pos = this.getCursorPosition(event);
+      let distanceX = this.getCoordsDistance(this.cursorX, pos.x);
+      let distanceY = this.getCoordsDistance(this.cursorY, pos.y);
+      */
       this.clearCanvas();
-      this.context.drawImage(this.image, this.getDrawPosition(this.originalDistanceCusorX, this.cursorX, distanceX), this.getDrawPosition(this.originalDistanceCusorY, this.cursorY, distanceY));
+      this.context.drawImage(this.image, this.originalDistanceCusorX, this.originalDistanceCusorY);
     }
 
     return event;
@@ -108,11 +126,6 @@ function (_super) {
 
   MoveTool.prototype.getCoordsDistance = function (a, b) {
     return a === b ? 0 : a > b ? a - b : b - a;
-  }; // @return negative number of c if a < b or 0
-
-
-  MoveTool.prototype.getDrawPosition = function (a, b, c) {
-    return a === b ? 0 : a < b ? -Math.abs(c) : Math.abs(c);
   };
 
   return MoveTool;

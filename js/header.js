@@ -38,17 +38,19 @@ function () {
       self.img = new Image(); // @ts-ignore
 
       self.img.src = e.target.result;
-      self.imgWidth = self.img.width;
-      self.imgHeight = self.img.height;
 
       self.img.onload = function () {
+        self.imgWidth = self.img.width;
+        self.imgHeight = self.img.height;
+
         if (Object.keys(__states.layer.layers).length === 0) {
           // load image offscreen to get dimensions
           (function (img) {
             resetApp();
             __states.width = img.width;
             __states.height = img.height; // END RESETS
-          })(self.img);
+          })(self.img); // if new image is larger ensure it fits into canvas    
+
         } else {
           if (self.imgWidth > __states.width || self.imgHeight > __states.height) {
             var diffWidth = self.imgWidth / (self.imgWidth / __states.width);

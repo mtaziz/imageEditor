@@ -9,10 +9,6 @@ class MoveTool extends Tool {
 
     button: HTMLElement;
     canvas: HTMLCanvasElement;
-    active: boolean;
-    timer: any;
-    entryCoords: Coords;
-    exitCoords: Coords;
     cursorX: number;
     cursorY: number;
     // distance between the position of the last onmouseup
@@ -29,8 +25,8 @@ class MoveTool extends Tool {
         this.canvasEditMode();
         this.cursorX = null;
         this.cursorY = null;
-        this.currentX = __states.layer.layers[__states.activeLayer].x;
-        this.currentY = __states.layer.layers[__states.activeLayer].y;        
+        this.currentX = this.getCursorPosition(event).x;
+        this.currentY = this.getCursorPosition(event).y;        
         this.run();
     }    
 
@@ -55,8 +51,16 @@ class MoveTool extends Tool {
         this.entry = this.getCursorPosition(event);
         this.cursorX = parseFloat(this.entry.x);
         this.cursorY = parseFloat(this.entry.y);
-        this.originalDistanceCusorX = Math.abs(this.currentX - this.cursorX);
-        this.originalDistanceCusorY = Math.abs(this.currentY - this.cursorY);
+        this.originalDistanceCusorX = this.currentX > this.cursorX ? 0 - Math.abs(this.currentX - this.cursorX) : Math.abs(this.cursorX - this.currentX);
+        this.originalDistanceCusorY = this.currentY > this.cursorY ? 0 - Math.abs(this.currentY - this.cursorY) : Math.abs(this.cursorY - this.currentY);
+        console.log(this.originalDistanceCusorX + '  ' + this.originalDistanceCusorY);
+        this.clearCanvas();
+
+        this.context.drawImage(
+            this.image, 
+            this.originalDistanceCusorX,
+            this.originalDistanceCusorY
+        );
     }
 
     private mouseUp(event : MouseEvent) : void {
@@ -64,7 +68,7 @@ class MoveTool extends Tool {
         this.currentY = this.getCursorPosition(event).y;
         this.isDraggable = false;
         this.canvas.removeEventListener('mousemove', this.mouseMove);
-
+/*
         __states.layer.layers[__states.activeLayer].x =                 
             this.getDrawPosition(
                 this.originalDistanceCusorX , 
@@ -78,28 +82,22 @@ class MoveTool extends Tool {
                 this.cursorY, 
                 this.getCoordsDistance(this.cursorY, this.currentY)
             );
+*/            
     }
 
     private mouseMove(event: MouseEvent) : MouseEvent {
         if(this.isDraggable) {
+            /*
             let pos = this.getCursorPosition(event);
             let distanceX = this.getCoordsDistance(this.cursorX, pos.x);
             let distanceY = this.getCoordsDistance(this.cursorY, pos.y); 
-
+            */
             this.clearCanvas();
 
             this.context.drawImage(
                 this.image, 
-                this.getDrawPosition(
-                    this.originalDistanceCusorX , 
-                    this.cursorX, 
-                    distanceX
-                ),
-                this.getDrawPosition(
-                    this.originalDistanceCusorY , 
-                    this.cursorY, 
-                    distanceY
-                )
+                this.originalDistanceCusorX,
+                this.originalDistanceCusorY
             );            
         }
         return event;
@@ -110,8 +108,4 @@ class MoveTool extends Tool {
         return a === b ? 0 : a > b ? a - b : b - a        
     }
 
-    // @return negative number of c if a < b or 0
-    private getDrawPosition(a : number, b : number, c : number) : number {
-        return a === b ? 0 : a < b ? -Math.abs(c) : Math.abs(c);
-    }
 }
