@@ -14,6 +14,8 @@ export class Tool {
 
         this.element = element;
         this.targetId = (<HTMLInputElement>this.element.target).id;
+        this.currentX = 0;
+        this.currentY = 0;   
 
         if((<HTMLInputElement>this.element.target).parentElement.classList.contains('tool-focus')) {
             (<HTMLInputElement>this.element.target).parentElement.classList.remove('tool-focus');
