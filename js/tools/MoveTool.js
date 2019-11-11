@@ -68,7 +68,7 @@ function (_super) {
     this.startCur = this.getCursorPosition(event);
   };
 
-  MoveTool.prototype.mouseUp = function (event) {
+  MoveTool.prototype.mouseUp = function () {
     __states.layer.layers[__states.activeLayer].x = this.currentX;
     __states.layer.layers[__states.activeLayer].y = this.currentY;
     this.isDraggable = false;
@@ -77,7 +77,7 @@ function (_super) {
   MoveTool.prototype.mouseMove = function (event) {
     if (this.isDraggable) {
       this.current = this.getCursorPosition(event);
-      if (!this.isInBounds(this.current)) return;
+      if (!this.isInBounds(this.current, this.canvas, this.image)) return;
       this.currentX = this.coordsDist(this.startCur.x, this.current.x);
       this.currentY = this.coordsDist(this.startCur.y, this.current.y);
       this.clearCanvas();
@@ -85,16 +85,15 @@ function (_super) {
     }
 
     return event;
-  }; // srt : start co-ordinate
-  // cnt : current co-ordinate
+  }; // srt : start co-ordinate,  cnt : current co-ordinate
 
 
   MoveTool.prototype.coordsDist = function (srt, cnt) {
     return srt === cnt ? cnt : srt > cnt ? cnt - (srt - cnt) : cnt + (cnt - srt);
   };
 
-  MoveTool.prototype.isInBounds = function (current) {
-    return current.x > 0 - this.image.width && current.x < this.canvas.width + this.image.width && current.y > 0 - this.image.height && current.y < this.canvas.height + this.image.height;
+  MoveTool.prototype.isInBounds = function (crnt, can, img) {
+    return crnt.x > 0 - img.width && crnt.x < can.width + img.width && crnt.y > 0 - img.height && crnt.y < can.height + img.height;
   };
 
   return MoveTool;

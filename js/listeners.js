@@ -54,7 +54,8 @@ var toolInstances = function () {
       return new MoveTool(event);
     }
   };
-}();
+}(); // Ensure only one tool is operating at a time
+
 
 function toolsSingleton(tool, event) {
   if (__states.tools.currentTool === tool) {

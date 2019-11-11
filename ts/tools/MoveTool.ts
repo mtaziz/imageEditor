@@ -12,14 +12,12 @@ class MoveTool extends Tool {
     isDraggable: boolean;
 
     public constructor(element : MouseEvent) {
-
         if(!__states.activeLayer) return;
         super(element);
-        this.canvasEditMode();  
-
+        this.canvasEditMode();
     }    
 
-    public quit(this : this) {
+    public quit() {
         document.getElementById(__states.activeLayer).style.cursor = 'pointer';
         this.canvas.removeEventListener('mousedown', this.mouseD);
         this.canvas.removeEventListener('mousemove', this.mouseM);
@@ -46,7 +44,7 @@ class MoveTool extends Tool {
         this.startCur = this.getCursorPosition(event);
     }
 
-    public mouseUp(event : MouseEvent) : void {
+    public mouseUp() : void {
         __states.layer.layers[__states.activeLayer].x = this.currentX;
         __states.layer.layers[__states.activeLayer].y = this.currentY;
         this.isDraggable = false;

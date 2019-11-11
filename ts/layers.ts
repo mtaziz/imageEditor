@@ -56,12 +56,12 @@ class CreateLayer {
     private addLayerToQueue() : void {
 
         const layerObj: LayerObj = {
-             w: __states.width,
-             h: __states.height,
-            op: this.opacity,
-             x: 0,
-             y: 0,
-           img: this.image.src || null  
+          w: __states.width,
+          h: __states.height,
+          op: this.opacity,
+          x: 0,
+          y: 0,
+          img: this.image.src || null  
         };
 
         __states.layer.layers[__states.layer.last] = layerObj;
