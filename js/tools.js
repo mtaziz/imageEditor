@@ -9,19 +9,18 @@ function () {
     if (!__states.activeLayer) return;
     this.element = element;
     this.targetId = this.element.target.id;
-
-    if (this.element.target.parentElement.classList.contains('tool-focus')) {
-      this.element.target.parentElement.classList.remove('tool-focus');
-      return;
-    } else {
-      this.element.target.parentElement.classList.add('tool-focus');
-    }
-
+    this.currentX = __states.layer.layers[__states.activeLayer].x;
+    this.currentY = __states.layer.layers[__states.activeLayer].y;
     this.canvas = document.getElementById(__states.activeLayer);
     this.context = this.canvas.getContext('2d');
-    this.canvasScreenshot = this.canvas.toDataURL();
     this.image = new Image();
-    this.image.src = this.canvasScreenshot;
+
+    if (!__states.layer.layers[__states.activeLayer].img) {
+      this.canvasScreenshot = this.canvas.toDataURL();
+      this.image.src = this.canvasScreenshot;
+    } else {
+      this.image.src = __states.layer.layers[__states.activeLayer].img;
+    }
   }
 
   Tool.prototype.getContext = function () {
@@ -33,16 +32,16 @@ function () {
         scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
         scrollTop = window.pageYOffset || document.documentElement.scrollTop;
     return {
-      top: rect.top + scrollTop,
-      left: rect.left + scrollLeft
+      x: rect.top + scrollTop,
+      y: rect.left + scrollLeft
     };
   };
 
   Tool.prototype.getCursorPosition = function (event) {
     var offsets = this.getOffset();
     return {
-      x: event.pageX - offsets.left,
-      y: event.pageY - offsets.top
+      x: event.pageX - offsets.x,
+      y: event.pageY - offsets.y
     };
   };
 

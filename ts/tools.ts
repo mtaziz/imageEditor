@@ -1,3 +1,8 @@
+export interface Coords {
+    x : number;
+    y : number;
+}
+
 export class Tool {
     element: MouseEvent;
     targetId: string;
@@ -12,23 +17,20 @@ export class Tool {
 
         if(!__states.activeLayer) return;
 
-        this.element = element;
+        this.element  = element;
         this.targetId = (<HTMLInputElement>this.element.target).id;
-        this.currentX = 0;
-        this.currentY = 0;   
+        this.currentX = __states.layer.layers[__states.activeLayer].x;
+        this.currentY = __states.layer.layers[__states.activeLayer].y;
+        this.canvas   = <HTMLCanvasElement>document.getElementById(__states.activeLayer);
+        this.context  = this.canvas.getContext('2d');
+        this.image    = new Image();
 
-        if((<HTMLInputElement>this.element.target).parentElement.classList.contains('tool-focus')) {
-            (<HTMLInputElement>this.element.target).parentElement.classList.remove('tool-focus');
-            return;
+        if(!__states.layer.layers[__states.activeLayer].img) {
+            this.canvasScreenshot = this.canvas.toDataURL();
+            this.image.src = this.canvasScreenshot;
         } else {
-            (<HTMLInputElement>this.element.target).parentElement.classList.add('tool-focus');
-        }
-
-        this.canvas = <HTMLCanvasElement>document.getElementById(__states.activeLayer);
-        this.context = this.canvas.getContext('2d');
-        this.canvasScreenshot = this.canvas.toDataURL();
-        this.image = new Image();
-        this.image.src = this.canvasScreenshot;
+            this.image.src = __states.layer.layers[__states.activeLayer].img;
+        }    
 
     }
 
@@ -36,27 +38,26 @@ export class Tool {
         return this.canvas.getContext('2d');
     }
 
-    public getOffset() : { top: number, left: number } {
+    public getOffset() : Coords{
         const rect = this.canvas.getBoundingClientRect(),
         scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
         scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         return { 
-            top: rect.top + scrollTop, 
-            left: rect.left + scrollLeft 
+            x: rect.top + scrollTop, 
+            y: rect.left + scrollLeft 
         }
     }
 
-    public getCursorPosition(event : MouseEvent) {
+    public getCursorPosition(event : MouseEvent) : Coords {
         const offsets = this.getOffset();
         return {
-            x: event.pageX - offsets.left,
-            y: event.pageY - offsets.top 
+            x: event.pageX - offsets.x,
+            y: event.pageY - offsets.y 
         }
     }
 
-    public clearCanvas() {
+    public clearCanvas() : void {
         this.context.clearRect(0, 0, __states.width, __states.height);
-
     }
     
 }

@@ -53,13 +53,18 @@ const toolInstances = (function() : any {
     }
 })();
 
-
+// Ensure only one tool is operating at a time
 function toolsSingleton(tool : string, event : MouseEvent) : void {
       if(__states.tools.currentTool === tool) {
-        __states.tools.toolObject.quit();
+        __states.tools.currentTool = null;
+        (<HTMLInputElement>event.target).parentElement.classList.remove('tool-focus');
+        return __states.tools.toolObject.quit();
       }
+
+      (<HTMLInputElement>event.target).parentElement.classList.add('tool-focus');
       __states.tools.toolObject = toolInstances[tool](event);
       __states.tools.currentTool = tool;
+      __states.tools.toolObject.run();
 }
 
 document.addEventListener('change', function(event) {

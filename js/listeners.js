@@ -58,11 +58,16 @@ var toolInstances = function () {
 
 function toolsSingleton(tool, event) {
   if (__states.tools.currentTool === tool) {
-    __states.tools.toolObject.quit();
+    __states.tools.currentTool = null;
+    event.target.parentElement.classList.remove('tool-focus');
+    return __states.tools.toolObject.quit();
   }
 
+  event.target.parentElement.classList.add('tool-focus');
   __states.tools.toolObject = toolInstances[tool](event);
   __states.tools.currentTool = tool;
+
+  __states.tools.toolObject.run();
 }
 
 document.addEventListener('change', function (event) {

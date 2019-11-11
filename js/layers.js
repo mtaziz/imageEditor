@@ -55,7 +55,8 @@ function () {
       h: __states.height,
       op: this.opacity,
       x: 0,
-      y: 0
+      y: 0,
+      img: this.image.src || null
     };
     __states.layer.layers[__states.layer.last] = layerObj;
   };
@@ -183,6 +184,13 @@ function adjustLayerOpacity(value) {
   if (!(value >= 0 || value <= 100)) return;
   var layer = document.getElementById(__states.activeLayer);
   var displayOpacity = document.getElementById('currentOpacity');
+  var screenShotImage = new Image();
+  screenShotImage.classList.add('layer-image');
+  screenShotImage.src = __states.layer.layers[__states.activeLayer].img.src; // need to replicate position here;
+
+  var context = layer.getContext('2d');
+  context.clearRect(0, 0, layer.width, layer.height);
   displayOpacity.innerHTML = value + "%";
-  layer.style.opacity = (value / 100).toString();
+  context.globalAlpha = value / 100;
+  context.drawImage(screenShotImage, 0, 0);
 }

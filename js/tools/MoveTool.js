@@ -38,69 +38,63 @@ function (_super) {
 
     _this.canvasEditMode();
 
-    _this.currentCursorX = null;
-    _this.currentCursorY = null;
-    _this.currentX = 0;
-    _this.currentY = 0;
-
-    _this.run();
-
     return _this;
   }
 
   MoveTool.prototype.quit = function () {
     document.getElementById(__states.activeLayer).style.cursor = 'pointer';
-    return this.active = false;
+    this.canvas.removeEventListener('mousedown', this.mouseD);
+    this.canvas.removeEventListener('mousemove', this.mouseM);
+    this.canvas.removeEventListener('mouseup', this.mouseU);
   };
 
   MoveTool.prototype.canvasEditMode = function () {
+    if (!this.canvas) return;
     this.canvas.style.cursor = 'crosshair';
   };
 
   MoveTool.prototype.run = function () {
-    var _this = this;
-
     this.isDraggable = false;
-
-    this.canvas.onmousedown = function (event) {
-      return _this.mouseDown(event);
-    };
-
-    this.canvas.onmousemove = function (event) {
-      return _this.mouseMove(event);
-    };
-
-    this.canvas.onmouseup = function (event) {
-      return _this.mouseUp(event);
-    };
+    this.mouseD = this.mouseDown.bind(this);
+    this.mouseM = this.mouseMove.bind(this);
+    this.mouseU = this.mouseUp.bind(this);
+    this.canvas.addEventListener('mousedown', this.mouseD);
+    this.canvas.addEventListener('mousemove', this.mouseM);
+    this.canvas.addEventListener('mouseup', this.mouseU);
   };
 
   MoveTool.prototype.mouseDown = function (event) {
     this.isDraggable = true;
-    this.entry = this.getCursorPosition(event);
-    this.startCursorX = parseFloat(this.entry.x);
-    this.startCursorY = parseFloat(this.entry.y);
+    this.startCur = this.getCursorPosition(event);
   };
 
   MoveTool.prototype.mouseUp = function (event) {
+    __states.layer.layers[__states.activeLayer].x = this.currentX;
+    __states.layer.layers[__states.activeLayer].y = this.currentY;
     this.isDraggable = false;
-    this.canvas.removeEventListener('mousemove', this.mouseMove);
   };
 
   MoveTool.prototype.mouseMove = function (event) {
     if (this.isDraggable) {
-      this.entry = this.getCursorPosition(event);
-      this.currentCursorX = parseFloat(this.entry.x);
-      this.currentCursorY = parseFloat(this.entry.y);
-      this.originalDistanceCusorX = this.startCursorX > this.currentCursorX ? this.currentX - Math.abs(this.startCursorX - this.currentCursorX) : this.currentX + Math.abs(this.startCursorX + this.currentX);
-      this.originalDistanceCusorY = this.startCursorY > this.currentCursorY ? this.currentY - Math.abs(this.startCursorY - this.currentCursorY) : this.currentY + Math.abs(this.startCursorY + this.currentCursorY);
+      this.current = this.getCursorPosition(event);
+      if (!this.isInBounds(this.current)) return;
+      this.currentX = this.coordsDist(this.startCur.x, this.current.x);
+      this.currentY = this.coordsDist(this.startCur.y, this.current.y);
       this.clearCanvas();
-      this.context.drawImage(this.image, this.originalDistanceCusorX, this.originalDistanceCusorY);
-      //this.currentX = this.originalDistanceCusorX;
-      //this.currentY = this.originalDistanceCusorY;
+      this.context.drawImage(this.image, this.currentX, this.currentY);
     }
 
     return event;
+  }; // srt : start co-ordinate
+  // cnt : current co-ordinate
+
+
+  MoveTool.prototype.coordsDist = function (srt, cnt) {
+    return srt === cnt ? cnt : srt > cnt ? cnt - (srt - cnt) : cnt + (cnt - srt);
+  };
+
+  MoveTool.prototype.isInBounds = function (current) {
+    return current.x > 0 - this.image.width && current.x < this.canvas.width + this.image.width && current.y > 0 - this.image.height && current.y < this.canvas.height + this.image.height;
   };
 
   return MoveTool;

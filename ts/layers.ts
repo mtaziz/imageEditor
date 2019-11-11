@@ -5,6 +5,7 @@ interface LayerObj {
     op: number;
     x : number;
     y:number;
+    img: any;
 }
 
 class CreateLayer {
@@ -59,7 +60,8 @@ class CreateLayer {
              h: __states.height,
             op: this.opacity,
              x: 0,
-             y: 0
+             y: 0,
+           img: this.image.src || null  
         };
 
         __states.layer.layers[__states.layer.last] = layerObj;
@@ -194,11 +196,18 @@ class AddTolayers {
 }
 
 function adjustLayerOpacity(value : number) {
-    if(!__states.activeLayer) return;
-    if(!(value >= 0 || value <= 100) ) return;
-    const layer = document.getElementById(__states.activeLayer);
-    const displayOpacity = document.getElementById('currentOpacity');
-    displayOpacity.innerHTML = `${value}%`;
-    layer.style.opacity = (value / 100).toString();
+    if (!__states.activeLayer) return;
+    if (!(value >= 0 || value <= 100)) return;
 
+    var layer = <HTMLCanvasElement>document.getElementById(__states.activeLayer);
+    var displayOpacity = document.getElementById('currentOpacity');
+    var screenShotImage = new Image();
+    screenShotImage.classList.add('layer-image');
+    screenShotImage.src = __states.layer.layers[__states.activeLayer].img.src;
+    // need to replicate position here;
+    var context = layer.getContext('2d');
+    context.clearRect(0,0, layer.width, layer.height);
+    displayOpacity.innerHTML = value + "%";
+    context.globalAlpha = value / 100;
+    context.drawImage(screenShotImage, 0, 0);
 }
