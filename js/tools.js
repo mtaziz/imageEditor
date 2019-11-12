@@ -27,21 +27,11 @@ function () {
     return this.canvas.getContext('2d');
   };
 
-  Tool.prototype.getOffset = function () {
-    var rect = this.canvas.getBoundingClientRect(),
-        scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
-        scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-    return {
-      x: rect.top + scrollTop,
-      y: rect.left + scrollLeft
-    };
-  };
-
   Tool.prototype.getCursorPosition = function (event) {
-    var offsets = this.getOffset();
+    var rect = this.canvas.getBoundingClientRect();
     return {
-      x: event.pageX - offsets.x,
-      y: event.pageY - offsets.y
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top
     };
   };
 
