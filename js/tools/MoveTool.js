@@ -86,16 +86,14 @@ function (_super) {
 
   MoveTool.prototype.mouseMove = function (event) {
     event.preventDefault();
-
-    if (this.isDraggable) {
-      this.cursor = this.getCursorPosition(event);
-      if (!this.isInBounds(this.currentX, this.currentY, this.canvas, this.image)) return;
-      if (!this.cursorOnImg(this.currentX, this.currentY, this.cursor, this.image)) return;
-      this.currentX = this.calcCurrent(this.currentX, this.cursor.x, this.coordsDist(this.startCur.x, this.cursor.x));
-      this.currentY = this.calcCurrent(this.currentY, this.cursor.y, this.coordsDist(this.startCur.y, this.cursor.y));
-    }
-
-    return event;
+    if (!this.isDraggable) return;
+    if (!this.isInBounds(this.currentX, this.currentY, this.canvas, this.image)) return;
+    console.log(this.isInBounds(this.currentX, this.currentY, this.canvas, this.image));
+    this.cursor = this.getCursorPosition(event);
+    if (!this.cursorOnImg(this.currentX, this.currentY, this.cursor, this.image)) return;
+    console.log(this.cursorOnImg(this.currentX, this.currentY, this.cursor, this.image));
+    this.currentX = this.calcCurrent(this.currentX, this.cursor.x, this.coordsDist(this.startCur.x, this.cursor.x));
+    this.currentY = this.calcCurrent(this.currentY, this.cursor.y, this.coordsDist(this.startCur.y, this.cursor.y));
   }; // srt : start co-ordinate,  cnt : current co-ordinate
 
 
@@ -117,7 +115,7 @@ function (_super) {
 
 
   MoveTool.prototype.isInBounds = function (crntX, crntY, canvas, img) {
-    return crntX >= 0 - img.width && crntX < canvas.width && crntY >= 0 - img.height && crntY < canvas.height;
+    return crntX >= 1 - img.width && crntX < canvas.width && crntY >= 1 - img.height && crntY < canvas.height;
   };
 
   return MoveTool;

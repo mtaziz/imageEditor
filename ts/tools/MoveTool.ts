@@ -67,17 +67,18 @@ class MoveTool extends Tool {
     public mouseMove(event: MouseEvent) {
         event.preventDefault();
 
-        if(this.isDraggable) {
+        if (!this.isDraggable) return;
+        if (!this.isInBounds(this.currentX, this.currentY, this.canvas, this.image)) return;
+        console.log(this.isInBounds(this.currentX, this.currentY, this.canvas, this.image))
 
-            this.cursor = this.getCursorPosition(event);
+        this.cursor = this.getCursorPosition(event);
 
-            if (!this.isInBounds(this.currentX, this.currentY, this.canvas, this.image)) return;
-            if (!this.cursorOnImg(this.currentX, this.currentY, this.cursor, this.image)) return;
+        if (!this.cursorOnImg(this.currentX, this.currentY, this.cursor, this.image)) return;
+        console.log(this.cursorOnImg(this.currentX, this.currentY, this.cursor, this.image))
+        this.currentX = this.calcCurrent(this.currentX, this.cursor.x, this.coordsDist(this.startCur.x, this.cursor.x)); 
+        this.currentY = this.calcCurrent(this.currentY, this.cursor.y, this.coordsDist(this.startCur.y, this.cursor.y));
 
-            this.currentX = this.calcCurrent(this.currentX, this.cursor.x, this.coordsDist(this.startCur.x, this.cursor.x)); 
-            this.currentY = this.calcCurrent(this.currentY, this.cursor.y, this.coordsDist(this.startCur.y, this.cursor.y));
 
-        }
 
     }
 
@@ -100,7 +101,7 @@ class MoveTool extends Tool {
 
     // is the image inside the canvas
     private isInBounds(crntX : number, crntY : number, canvas : HTMLCanvasElement, img : HTMLImageElement) : boolean {
-        return (crntX >= 0 - img.width ) && crntX < canvas.width && (crntY >= 0 - img.height ) && crntY < canvas.height;           
+        return (crntX >= 1 - img.width ) && crntX < canvas.width && (crntY >= 1 - img.height ) && crntY < canvas.height;           
     }
 
 }
