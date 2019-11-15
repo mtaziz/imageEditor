@@ -64,7 +64,6 @@ function toolsSingleton(tool : string, event : MouseEvent) : void {
       (<HTMLInputElement>event.target).parentElement.classList.add('tool-focus');
       __states.tools.toolObject = toolInstances[tool](event);
       __states.tools.currentTool = tool;
-      __states.tools.toolObject.run();
 }
 
 document.addEventListener('change', function(event) {

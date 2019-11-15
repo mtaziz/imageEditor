@@ -38,6 +38,8 @@ function (_super) {
 
     _this.canvasEditMode();
 
+    _this.run();
+
     return _this;
   }
 
@@ -48,16 +50,24 @@ function (_super) {
 
   MoveTool.prototype.run = function () {
     this.isDraggable = false;
+    this.mouseEvents();
+    setInterval(function () {
+      this.tick();
+    }.bind(this), 1000 / 10);
+  };
+
+  MoveTool.prototype.mouseEvents = function () {
     this.mouseD = this.mouseDown.bind(this);
     this.mouseM = this.mouseMove.bind(this);
     this.mouseU = this.mouseUp.bind(this);
     this.canvas.addEventListener('mousedown', this.mouseD);
     this.canvas.addEventListener('mousemove', this.mouseM);
     this.canvas.addEventListener('mouseup', this.mouseU);
-    setInterval(function () {
-      this.clearCanvas();
-      this.context.drawImage(this.image, this.currentX, this.currentY);
-    }.bind(this), 1000 / 30);
+  };
+
+  MoveTool.prototype.tick = function () {
+    this.clearCanvas();
+    this.context.drawImage(this.image, this.currentX, this.currentY);
   };
 
   MoveTool.prototype.quit = function () {
@@ -71,10 +81,6 @@ function (_super) {
     event.preventDefault();
     this.isDraggable = true;
     this.startCur = this.getCursorPosition(event);
-    console.log(this.startCur);
-    console.log(this.currentX);
-    console.log(this.currentY);
-    console.log("------------");
   };
 
   MoveTool.prototype.mouseUp = function (event) {
@@ -87,23 +93,13 @@ function (_super) {
   MoveTool.prototype.mouseMove = function (event) {
     event.preventDefault();
     if (!this.isDraggable) return;
-    if (!this.isInBounds(this.currentX, this.currentY, this.canvas, this.image)) return;
-    console.log(this.isInBounds(this.currentX, this.currentY, this.canvas, this.image));
-    this.cursor = this.getCursorPosition(event);
-    if (!this.cursorOnImg(this.currentX, this.currentY, this.cursor, this.image)) return;
-    console.log(this.cursorOnImg(this.currentX, this.currentY, this.cursor, this.image));
-    this.currentX = this.calcCurrent(this.currentX, this.cursor.x, this.coordsDist(this.startCur.x, this.cursor.x));
-    this.currentY = this.calcCurrent(this.currentY, this.cursor.y, this.coordsDist(this.startCur.y, this.cursor.y));
-  }; // srt : start co-ordinate,  cnt : current co-ordinate
+    console.log(this.isInBounds())
+    if (!this.isInBounds()) return;
 
+    this.cursor = this.getCursorPosition(event); //if (!this.cursorOnImg(this.currentX, this.currentY, this.cursor, this.image)) return;
 
-  MoveTool.prototype.coordsDist = function (srt, cnt) {
-    return srt === cnt ? 0 : srt > cnt ? srt - cnt : cnt - srt;
-  }; // distance between cursor at mousedown and current position
-
-
-  MoveTool.prototype.calcCurrent = function (origCoord, currentCoord, cursorTravel) {
-    return origCoord > currentCoord ? origCoord - cursorTravel : origCoord + cursorTravel;
+    this.currentX = this.currentX - this.startCur.x + this.cursor.x;
+    this.currentY = this.currentY - this.startCur.y + this.cursor.y;
   }; // is the cursor inside the boundries of the image
 
 
@@ -114,8 +110,18 @@ function (_super) {
   }; // is the image inside the canvas
 
 
-  MoveTool.prototype.isInBounds = function (crntX, crntY, canvas, img) {
-    return crntX >= 1 - img.width && crntX < canvas.width && crntY >= 1 - img.height && crntY < canvas.height;
+  MoveTool.prototype.isInBounds = function () {
+    console.log(this.currentX)
+    console.log(this.image.width)
+    console.log(this.canvas.width)
+    console.log(this.currentX > 20 - this.image.width)
+    console.log(this.currentX < this.canvas.width - 20)
+    console.log(this.currentY > -20 + this.image.height)
+    console.log(this.currentY < this.canvas.height - 20)
+
+    return (this.currentX > 20 - this.image.width) || this.currentX < this.canvas.width - 20 &&
+      (this.currentY > -20 + this.image.height) || this.currentY < this.canvas.height - 20
+                    
   };
 
   return MoveTool;
