@@ -43,6 +43,7 @@ class MoveTool extends Tool {
     }
 
     public tick() {
+        if (!this.isInBounds()) return;
         this.clearCanvas();
         this.context.drawImage(this.image, this.currentX, this.currentY);
     }
@@ -73,10 +74,8 @@ class MoveTool extends Tool {
         event.preventDefault();
 
         if (!this.isDraggable) return;
-        if (!this.isInBounds()) return;
-
         this.cursor = this.getCursorPosition(event);
-        //if (!this.cursorOnImg(this.currentX, this.currentY, this.cursor, this.image)) return;
+        if (!this.cursorOnImg(this.currentX, this.currentY, this.cursor, this.image)) return;
 
         this.currentX = this.currentX - this.startCur.x + this.cursor.x;
         this.currentY = this.currentY - this.startCur.y + this.cursor.y;
@@ -91,7 +90,8 @@ class MoveTool extends Tool {
 
     // is the image inside the canvas
     private isInBounds() : boolean {
-        return this.currentX > 0 - 20 && this.currentX < 200;          
+        return this.currentX > 40 - this.image.width && this.currentX < this.canvas.width - 40 &&
+            this.currentY > 40 - this.image.height && this.currentY < this.canvas.height - 40    
     }
 
 }
