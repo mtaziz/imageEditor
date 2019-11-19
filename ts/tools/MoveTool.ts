@@ -43,7 +43,6 @@ class MoveTool extends Tool {
     }
 
     public tick() {
-        if (!this.isInBounds()) return;
         this.clearCanvas();
         this.context.drawImage(this.image, this.currentX, this.currentY);
     }
@@ -76,22 +75,28 @@ class MoveTool extends Tool {
         if (!this.isDraggable) return;
         this.cursor = this.getCursorPosition(event);
         if (!this.cursorOnImg(this.currentX, this.currentY, this.cursor, this.image)) return;
-
+        var tempX = this.currentX;
+        var tempY = this.currentY;
         this.currentX = this.currentX - this.startCur.x + this.cursor.x;
         this.currentY = this.currentY - this.startCur.y + this.cursor.y;
+        if (!this.isInBounds()) {
+            this.currentX = tempX;
+            this.currentY = tempY;
+        }
+
     }
 
     // is the cursor inside the boundries of the image
     private cursorOnImg(x : number, y : number, cursor : Coords, img : HTMLImageElement) : boolean {
-        if (cursor.x > x + img.width && cursor.x < x + img.width) return false;  
-        if (cursor.y > y + img.height && cursor.y < y + img.height) return false;  
+        if (cursor.x > x + img.width && cursor.x < x) return false;  
+        if (cursor.y > y + img.height && cursor.y < y) return false;  
         return true;
     }
 
     // is the image inside the canvas
     private isInBounds() : boolean {
-        return this.currentX > 40 - this.image.width && this.currentX < this.canvas.width - 40 &&
-            this.currentY > 40 - this.image.height && this.currentY < this.canvas.height - 40    
+        return this.currentX > 20 - this.image.width && this.currentX < this.canvas.width - 20 &&
+            this.currentY > 20 - this.image.height && this.currentY < this.canvas.height - 20    
     }
 
 }

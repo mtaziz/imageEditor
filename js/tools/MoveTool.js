@@ -66,7 +66,6 @@ function (_super) {
   };
 
   MoveTool.prototype.tick = function () {
-    if (!this.isInBounds()) return;
     this.clearCanvas();
     this.context.drawImage(this.image, this.currentX, this.currentY);
   };
@@ -95,15 +94,28 @@ function (_super) {
     event.preventDefault();
     if (!this.isDraggable) return;
     this.cursor = this.getCursorPosition(event);
+    console.log(this.currentX);
+    console.log(this.currentY);
+    console.log(this.cursor);
+    console.log(this.currentX + this.image.width);
+    console.log(this.currentY + this.image.height);
+    console.log("================================");
     if (!this.cursorOnImg(this.currentX, this.currentY, this.cursor, this.image)) return;
+    var tempX = this.currentX;
+    var tempY = this.currentY;
     this.currentX = this.currentX - this.startCur.x + this.cursor.x;
     this.currentY = this.currentY - this.startCur.y + this.cursor.y;
+
+    if (!this.isInBounds()) {
+      this.currentX = tempX;
+      this.currentY = tempY;
+    }
   }; // is the cursor inside the boundries of the image
 
 
   MoveTool.prototype.cursorOnImg = function (x, y, cursor, img) {
-    if (cursor.x > x + img.width && cursor.x < x + img.width) return false;
-    if (cursor.y > y + img.height && cursor.y < y + img.height) return false;
+    if (cursor.x > x + img.width && cursor.x < x) return false;
+    if (cursor.y > y + img.height && cursor.y < y) return false;
     return true;
   }; // is the image inside the canvas
 
